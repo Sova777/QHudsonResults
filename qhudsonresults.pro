@@ -1,0 +1,23 @@
+TEMPLATE = app
+TARGET = qhudsonresults
+VERSION = 1.0.0
+QT += core gui
+greaterThan(QT_MAJOR_VERSION, 4) {
+           QT += widgets
+}
+#QMAKE_CXXFLAGS = -Wno-unused-parameter
+#CONFIG += console
+DEPENDPATH += . src
+INCLUDEPATH += . src
+
+HEADERS += src/MainWindow.h \
+           src/TestItem.h
+
+FORMS += src/MainWindow.ui
+
+SOURCES += src/main.cpp \
+           src/MainWindow.cpp \
+           src/TestItem.cpp
+
+RESOURCES += src/resources.qrc
+RC_FILE += src/QHudsonResults.rc

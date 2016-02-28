@@ -1,0 +1,9 @@
+<RCC>
+  <qresource prefix="icon">
+    <file>../images/absent.png</file>
+    <file>../images/failed.png</file>
+    <file>../images/known.png</file>
+    <file>../images/passed.png</file>
+    <file>../images/window.png</file>
+  </qresource>
+</RCC>
