@@ -59,7 +59,7 @@ private:
 private slots:
     void about();
     void refresh();
-    void cellClicked(int row, int column);
+    void cellChanged(int row, int column, int previousRow, int previousColumn);
     void linkActivated(const QUrl& link);
 
 };

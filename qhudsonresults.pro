@@ -10,12 +10,14 @@ greaterThan(QT_MAJOR_VERSION, 4) {
 DEPENDPATH += . src
 INCLUDEPATH += . src
 
-HEADERS += src/MainWindow.h \
+HEADERS += src/HtmlItemDelegate.h \
+           src/MainWindow.h \
            src/TestItem.h
 
 FORMS += src/MainWindow.ui
 
 SOURCES += src/main.cpp \
+           src/HtmlItemDelegate.cpp \
            src/MainWindow.cpp \
            src/TestItem.cpp
 

@@ -39,6 +39,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "TestItem.h"
 
 #include "ui_MainWindow.h"
+#include "HtmlItemDelegate.h"
 
 using namespace std;
 
@@ -52,8 +53,8 @@ MainWindow::MainWindow() {
             this, SLOT(about()));
     connect(widget.btnRefresh, SIGNAL(clicked()),
             this, SLOT(refresh()));
-    connect(widget.table, SIGNAL(cellClicked(int, int)),
-            this, SLOT(cellClicked(int, int)));
+    connect(widget.table, SIGNAL(currentCellChanged(int, int, int, int)),
+            this, SLOT(cellChanged(int, int, int, int)));
     connect(widget.text, SIGNAL(anchorClicked(const QUrl &)),
             this, SLOT(linkActivated(const QUrl &)));
 
@@ -79,6 +80,8 @@ MainWindow::MainWindow() {
     bug2_max = settings.value("bug2_max").toInt();
     bug3_link = settings.value("bug3_link").toString();
     bug3_max = settings.value("bug3_max").toInt();
+
+    widget.table->setItemDelegate(new HtmlItemDelegate(widget.table));
 }
 
 MainWindow::~MainWindow() {
@@ -116,10 +119,13 @@ void MainWindow::refresh() {
     widget.table->setEnabled(true);
 }
 
-void MainWindow::cellClicked(int row, int column) {
+void MainWindow::cellChanged(int row, int column, int previousRow, int previousColumn) {
     QModelIndex index = widget.table->model()->index(row, 0);
     QString name = widget.table->model()->data(index).toString();
     QString text = QString("<h1>%1</h1>").arg(name);
+    QString methodName = name.section(".", -1, -1);
+    QString fileName = name.section(".", -2, -2);
+    QString packageName = name.section(".", 0, -3);
 
     foreach (QString jobName, jobNames) {
         QString key = QString(QString("%1|%2").arg(name).arg(jobName));
@@ -134,9 +140,22 @@ void MainWindow::cellClicked(int row, int column) {
                 text += "<td>&nbsp;&nbsp;" + item.getStatusImage() + "</td>";
                 QString message = item.getMessage();
                 if (message == "null") {
-                    message = QString("<a href=\"%1%2/%3/testReport/\">OK</a>").arg(hudson).arg(jobName).arg(item.getBuild());
+                    message = QString("<a href=\"%1%2/%3/testReport/%4/%5/%6\">OK</a>")
+                            .arg(hudson)
+                            .arg(jobName)
+                            .arg(item.getBuild())
+                            .arg(packageName)
+                            .arg(fileName)
+                            .arg(methodName);
                 } else {
-                    message = QString("<a href=\"%1%2/%3/testReport/\">%4</a>").arg(hudson).arg(jobName).arg(item.getBuild()).arg(message);
+                    message = QString("<a href=\"%1%2/%3/testReport/%4/%5/%6\">%7</a>")
+                            .arg(hudson)
+                            .arg(jobName)
+                            .arg(item.getBuild())
+                            .arg(packageName)
+                            .arg(fileName)
+                            .arg(methodName)
+                            .arg(message);
                 }
 //                text += "<td>&nbsp;&nbsp;" + item.getBugId() + "</td>";
                 text += "<td>&nbsp;&nbsp;" + message + "</td>";
@@ -226,7 +245,7 @@ void MainWindow::readFile(const QString& fileName) {
             if (allTests.contains(key)) {
                 QList<int> testItems = allTests.value(key);
                 foreach (int testIndex, testItems) {
-                    cellValue += testsList[testIndex].getStatusChar();
+                    cellValue += testsList[testIndex].getStatusImage();
                 }
             }
             QTableWidgetItem *item = new QTableWidgetItem();
