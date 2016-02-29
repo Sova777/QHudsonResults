@@ -204,7 +204,7 @@ void MainWindow::readFile(const QString& fileName) {
     }
 
     QStringList headers = QStringList();
-    headers.append("Имя теста");
+    headers.append(QString::fromUtf8("Имя теста"));
     counter = 0;
     foreach (QString job, jobsHash.keys()) {
         headers.append(job);
