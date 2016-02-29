@@ -28,12 +28,13 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <QCloseEvent>
 #include <QDesktopServices>
 #include <QDesktopWidget>
+#include <QFile>
 #include <QList>
 #include <QMap>
 #include <QMessageBox>
 #include <QSettings>
 #include <QString>
-#include <QTextStream >
+#include <QTextStream>
 
 #include "MainWindow.h"
 #include "TestItem.h"
