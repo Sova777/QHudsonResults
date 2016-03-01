@@ -192,11 +192,11 @@ void MainWindow::readFile(const QString& fileName) {
         if (line.contains(testNameFilter, Qt::CaseInsensitive)) {
             QStringList fields = line.split(",");
             QString job = fields.at(0).trimmed();
-            QString build = fields.at(1).trimmed();
-            QString name = fields.at(2).trimmed();
-            QString status = fields.at(3).trimmed();
-            QString bugId = fields.at(4).trimmed();
-            QString message = fields.at(5).trimmed();
+            QString build = fields.at(2).trimmed();
+            QString name = fields.at(3).trimmed();
+            QString status = fields.at(4).trimmed();
+            QString bugId = fields.at(5).trimmed();
+            QString message = fields.at(6).trimmed();
 
             if (name.contains(testNameFilter, Qt::CaseInsensitive)) {
                 testsList.push_back(TestItem(job, build, name, status, bugId, message));
