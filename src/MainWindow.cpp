@@ -84,6 +84,7 @@ MainWindow::MainWindow() {
     bug3_max = settings.value("bug3_max").toInt();
 
     widget.table->setItemDelegate(new HtmlItemDelegate(widget.table));
+    widget.table->setItemDelegateForColumn(0, new QItemDelegate(widget.table));
     widget.calendarWidget->setSelectedDate(widget.calendarWidget->selectedDate().addDays(-10));
     widget.spinBox->setValue(10);
 }
@@ -143,6 +144,20 @@ void MainWindow::cellChanged(int row, int column, int previousRow, int previousC
                 text += "<td>&nbsp;&nbsp;" + item.getBuild() + "</td>";
                 text += "<td>&nbsp;&nbsp;" + item.getTime().replace('_', ' ') + "</td>";
                 text += "<td>&nbsp;&nbsp;" + item.getStatusImage() + "</td>";
+                if (item.getBugId() == "null") {
+                    text += "<td>&nbsp;&nbsp;</td>";
+                } else {
+                    int bug = item.getBugIdInt();
+                    QString link;
+                    if (bug <= bug1_max) {
+                        link = QString(bug1_link).arg(bug);
+                    } else if (bug <= bug2_max) {
+                        link = QString(bug2_link).arg(bug);
+                    } else {
+                        link = QString(bug3_link).arg(bug);
+                    }
+                    text += QString("<td>&nbsp;&nbsp;%1</td>").arg(link);                        
+                }
                 QString message = item.getMessage();
                 if (message == "null") {
                     message = QString("<a href=\"%1%2/%3/testReport/%4/%5/%6\">OK</a>")

@@ -43,6 +43,10 @@ QString TestItem::getBugId() const {
     return bugId;
 }
 
+int TestItem::getBugIdInt() const {
+    return bugId.toInt();
+}
+
 QString TestItem::getTime() const {
     return time;
 }

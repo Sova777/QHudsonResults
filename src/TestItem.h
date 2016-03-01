@@ -35,6 +35,7 @@ public:
 //    TestItem& addBugId(QString _bugId);
 //    TestItem& addMessage(QString _message);
     QString getBugId() const;
+    int getBugIdInt() const;
     QString getTime() const;
     QString getBuild() const;
     QString getJob() const;
