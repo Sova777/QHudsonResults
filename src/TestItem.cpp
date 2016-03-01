@@ -28,9 +28,10 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <QString>
 #include "TestItem.h"
 
-TestItem::TestItem(QString _job, QString _build, QString _name, QString _status,
-        QString _bugId, QString _message) {
+TestItem::TestItem(QString _job, QString _time, QString _build, QString _name,
+        QString _status, QString _bugId, QString _message) {
     job = _job;
+    time = _time;
     build = _build;
     name = _name;
     status = _status;
@@ -40,6 +41,10 @@ TestItem::TestItem(QString _job, QString _build, QString _name, QString _status,
 
 QString TestItem::getBugId() const {
     return bugId;
+}
+
+QString TestItem::getTime() const {
+    return time;
 }
 
 QString TestItem::getBuild() const {

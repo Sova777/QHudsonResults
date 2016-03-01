@@ -26,6 +26,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
 #include <QCloseEvent>
+#include <QDate>
 #include <QDesktopServices>
 #include <QDesktopWidget>
 #include <QFile>
@@ -83,6 +84,8 @@ MainWindow::MainWindow() {
     bug3_max = settings.value("bug3_max").toInt();
 
     widget.table->setItemDelegate(new HtmlItemDelegate(widget.table));
+    widget.calendarWidget->setSelectedDate(widget.calendarWidget->selectedDate().addDays(-10));
+    widget.spinBox->setValue(10);
 }
 
 MainWindow::~MainWindow() {
@@ -138,6 +141,7 @@ void MainWindow::cellChanged(int row, int column, int previousRow, int previousC
                 text += "<tr>";
                 TestItem item = testsList[testIndex];
                 text += "<td>&nbsp;&nbsp;" + item.getBuild() + "</td>";
+                text += "<td>&nbsp;&nbsp;" + item.getTime().replace('_', ' ') + "</td>";
                 text += "<td>&nbsp;&nbsp;" + item.getStatusImage() + "</td>";
                 QString message = item.getMessage();
                 if (message == "null") {
@@ -175,6 +179,8 @@ void MainWindow::linkActivated(const QUrl& link) {
 
 void MainWindow::readFile(const QString& fileName) {
     QString testNameFilter = widget.editTestName->text();
+    QString dateMin = widget.calendarWidget->selectedDate().toString("yyyy-MM-dd");
+    int builds = widget.spinBox->value();
 
     jobsHash.clear();
     testsHash.clear();
@@ -192,6 +198,7 @@ void MainWindow::readFile(const QString& fileName) {
         if (line.contains(testNameFilter, Qt::CaseInsensitive)) {
             QStringList fields = line.split(",");
             QString job = fields.at(0).trimmed();
+            QString time = fields.at(1).trimmed();
             QString build = fields.at(2).trimmed();
             QString name = fields.at(3).trimmed();
             QString status = fields.at(4).trimmed();
@@ -199,15 +206,20 @@ void MainWindow::readFile(const QString& fileName) {
             QString message = fields.at(6).trimmed();
 
             if (name.contains(testNameFilter, Qt::CaseInsensitive)) {
-                testsList.push_back(TestItem(job, build, name, status, bugId, message));
-                jobsHash[job] = 0;
-                testsHash[name] = 0;
-                QString key = QString(QString("%1|%2").arg(name).arg(job)); 
-                if (!allTests.contains(key)) {
-                    allTests[key] = QList<int>();
+                if (time > dateMin) {
+                    testsList.push_back(TestItem(job, time, build, name, status, bugId, message));
+                    jobsHash[job] = 0;
+                    testsHash[name] = 0;
+                    QString key = QString(QString("%1|%2").arg(name).arg(job));
+                    if (!allTests.contains(key)) {
+                        allTests[key] = QList<int>();
+                    }
+                    allTests[key].append(counter);
+                    if (allTests[key].size() > builds) {
+                        allTests[key].removeFirst();
+                    }
+                    counter++;
                 }
-                allTests[key].append(counter);
-                counter++;
             }
         }
     }

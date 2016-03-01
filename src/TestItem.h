@@ -30,11 +30,12 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 class TestItem {
 public:
-    TestItem(QString _job, QString _build, QString _name, QString _status,
-            QString _bugId, QString _message);
+    TestItem(QString _job, QString _time, QString _build, QString _name,
+            QString _status, QString _bugId, QString _message);
 //    TestItem& addBugId(QString _bugId);
 //    TestItem& addMessage(QString _message);
     QString getBugId() const;
+    QString getTime() const;
     QString getBuild() const;
     QString getJob() const;
     QString getMessage() const;
@@ -45,6 +46,7 @@ public:
 
 private:
     QString job;
+    QString time;
     QString build;
     QString name;
     QString status;
