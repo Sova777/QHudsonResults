@@ -42,6 +42,7 @@ public:
     QString getMessage() const;
     QString getName() const;
     QString getStatus() const;
+    bool isFailed() const;
     QString getStatusChar() const;
     QString getStatusImage() const;
 

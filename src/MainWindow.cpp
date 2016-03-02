@@ -86,7 +86,7 @@ MainWindow::MainWindow() {
     widget.table->setItemDelegate(new HtmlItemDelegate(widget.table));
     widget.table->setItemDelegateForColumn(0, new QItemDelegate(widget.table));
     widget.calendarWidget->setSelectedDate(widget.calendarWidget->selectedDate().addDays(-10));
-    widget.spinBox->setValue(10);
+    widget.spinBuilds->setValue(10);
 }
 
 MainWindow::~MainWindow() {
@@ -124,7 +124,7 @@ void MainWindow::refresh() {
     widget.table->setEnabled(true);
 }
 
-void MainWindow::cellChanged(int row, int column, int previousRow, int previousColumn) {
+void MainWindow::cellChanged(int row, int /*column*/, int /*previousRow*/, int /*previousColumn*/) {
     QModelIndex index = widget.table->model()->index(row, 0);
     QString name = widget.table->model()->data(index).toString();
     QString text = QString("<h1>%1</h1>").arg(name);
@@ -175,9 +175,8 @@ void MainWindow::cellChanged(int row, int column, int previousRow, int previousC
                             .arg(packageName)
                             .arg(fileName)
                             .arg(methodName)
-                            .arg(message);
+                            .arg(toHtml(message));
                 }
-//                text += "<td>&nbsp;&nbsp;" + item.getBugId() + "</td>";
                 text += "<td>&nbsp;&nbsp;" + message + "</td>";
                 text += "</tr>";
             }
@@ -195,7 +194,8 @@ void MainWindow::linkActivated(const QUrl& link) {
 void MainWindow::readFile(const QString& fileName) {
     QString testNameFilter = widget.editTestName->text();
     QString dateMin = widget.calendarWidget->selectedDate().toString("yyyy-MM-dd");
-    int builds = widget.spinBox->value();
+    int builds = widget.spinBuilds->value();
+    bool realNamesOnly = widget.cbRealName->isChecked();
 
     jobsHash.clear();
     testsHash.clear();
@@ -221,24 +221,44 @@ void MainWindow::readFile(const QString& fileName) {
             QString message = fields.at(6).trimmed();
 
             if (name.contains(testNameFilter, Qt::CaseInsensitive)) {
-                if (time > dateMin) {
-                    testsList.push_back(TestItem(job, time, build, name, status, bugId, message));
-                    jobsHash[job] = 0;
-                    testsHash[name] = 0;
-                    QString key = QString(QString("%1|%2").arg(name).arg(job));
-                    if (!allTests.contains(key)) {
-                        allTests[key] = QList<int>();
+                if (!realNamesOnly || isRealName(name)) {
+                    if (time > dateMin) {
+                        testsList.push_back(TestItem(job, time, build, name, status, bugId, message));
+                        QString key = QString(QString("%1|%2").arg(name).arg(job));
+                        if (!allTests.contains(key)) {
+                            allTests[key] = QList<int>();
+                        }
+                        allTests[key].append(counter);
+                        if (allTests[key].size() > builds) {
+                            allTests[key].removeFirst();
+                        }
+                        counter++;
                     }
-                    allTests[key].append(counter);
-                    if (allTests[key].size() > builds) {
-                        allTests[key].removeFirst();
-                    }
-                    counter++;
                 }
             }
         }
     }
     file.close();
+
+    foreach (QString key, allTests.keys()) {
+        int testTotal = 0;
+        int testFailed = 0;
+        foreach (int id, allTests[key]) {
+            if (testsList[id].isFailed()) {
+                testFailed++;
+            }
+            testTotal++;
+        }
+        int minPercents = widget.spinPercents->value();
+        if ((100 * testFailed / testTotal) < minPercents) {
+            allTests.remove(key);
+        } else {
+            foreach (int id, allTests[key]) {
+                jobsHash[testsList[id].getJob()] = 0;
+                testsHash[testsList[id].getName()] = 0;
+            }
+        }
+    }
 
     int sizeJobs = jobsHash.size();
     widget.table->setRowCount(testsHash.size());
@@ -284,4 +304,18 @@ void MainWindow::readFile(const QString& fileName) {
 
         counter++;
     }
+}
+
+QString MainWindow::toHtml(QString& text) {
+    return text.replace('&', "&amp;").replace('\"', "&quot;").replace('<', "&lt;").replace('>', "&gt;");
+}
+
+bool MainWindow::isRealName(QString& name) {
+    if (name.endsWith(".BeforeFirstTest")) {
+        return false;
+    }
+    if (name.endsWith(".unknown")) {
+        return false;
+    }
+    return QRegExp("[_.0-9a-zA-Z]*").exactMatch(name);
 }

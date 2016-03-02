@@ -55,11 +55,13 @@ private:
 
     void closeEvent(QCloseEvent *event);
     void readFile(const QString& fileName);
+    QString toHtml(QString& text);
+    bool isRealName(QString& name);
 
 private slots:
     void about();
     void refresh();
-    void cellChanged(int row, int column, int previousRow, int previousColumn);
+    void cellChanged(int row, int /*column*/, int /*previousRow*/, int /*previousColumn*/);
     void linkActivated(const QUrl& link);
 
 };

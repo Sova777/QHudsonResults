@@ -71,6 +71,10 @@ QString TestItem::getStatus() const {
     return status;
 }
 
+bool TestItem::isFailed() const {
+    return (status == "failed");
+}
+
 QString TestItem::getStatusChar() const {
     if (status == "passed") {
         return "V";
