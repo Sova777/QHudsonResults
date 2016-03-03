@@ -52,6 +52,8 @@ private:
     int bug2_max;
     QString bug3_link;
     int bug3_max;
+    QString template_title[10];
+    QString template_regexp[10];
 
     void closeEvent(QCloseEvent *event);
     void readFile(const QString& fileName);

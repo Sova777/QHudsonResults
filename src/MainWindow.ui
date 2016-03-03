@@ -159,7 +159,7 @@
          </rect>
         </property>
         <property name="text">
-         <string>Минимальный процент падений</string>
+         <string>Мин. процент падений</string>
         </property>
        </widget>
        <widget class="QSpinBox" name="spinPercents">
