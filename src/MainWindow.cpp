@@ -242,6 +242,8 @@ void MainWindow::readFile(const QString& fileName) {
     QString testNameFilter = widget.editTestName->text();
     QString dateMin = widget.calendarWidget->selectedDate().toString("yyyy-MM-dd");
     QRegExp jobsRegExp(template_regexp[widget.cbMode->currentIndex()]);
+    bool checkKnownFailures = (widget.editBugs->text() == "") ? false : true;
+    QRegExp bugsRegExp(widget.editBugs->text());
     int builds = widget.spinBuilds->value();
     bool realNamesOnly = widget.cbRealName->isChecked();
 
@@ -291,14 +293,23 @@ void MainWindow::readFile(const QString& fileName) {
     foreach (QString key, allTests.keys()) {
         int testTotal = 0;
         int testFailed = 0;
+        bool bugExists = (checkKnownFailures) ? false : true;
         foreach (int id, allTests[key]) {
             if (testsList[id].isFailed()) {
                 testFailed++;
+            } else if (testsList[id].getBugId() != "") {
+                if (!bugExists) {
+                    if (bugsRegExp.exactMatch(testsList[id].getBugId())) {
+                        bugExists = true;
+                    }
+                }
             }
             testTotal++;
         }
         int minPercents = widget.spinPercents->value();
         if ((100 * testFailed / testTotal) < minPercents) {
+            allTests.remove(key);
+        } else if (!bugExists) {
             allTests.remove(key);
         } else {
             foreach (int id, allTests[key]) {

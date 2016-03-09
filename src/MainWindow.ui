@@ -85,7 +85,7 @@
         <property name="geometry">
          <rect>
           <x>6</x>
-          <y>400</y>
+          <y>415</y>
           <width>288</width>
           <height>30</height>
          </rect>
@@ -182,7 +182,7 @@
         <property name="geometry">
          <rect>
           <x>6</x>
-          <y>320</y>
+          <y>350</y>
           <width>288</width>
           <height>30</height>
          </rect>
@@ -198,10 +198,33 @@
         <property name="geometry">
          <rect>
           <x>6</x>
-          <y>360</y>
+          <y>380</y>
           <width>288</width>
           <height>30</height>
          </rect>
+        </property>
+       </widget>
+       <widget class="QLineEdit" name="editBugs">
+        <property name="geometry">
+         <rect>
+          <x>6</x>
+          <y>316</y>
+          <width>71</width>
+          <height>30</height>
+         </rect>
+        </property>
+       </widget>
+       <widget class="QLabel" name="label_3">
+        <property name="geometry">
+         <rect>
+          <x>90</x>
+          <y>316</y>
+          <width>201</width>
+          <height>30</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>Номера багов</string>
         </property>
        </widget>
       </widget>
