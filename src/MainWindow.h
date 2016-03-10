@@ -44,6 +44,7 @@ private:
     QList<TestItem> testsList;
     QMap<QString, QList<int> > allTests;
     QStringList jobNames;
+    QString htmlCode;
     QString data;
     QString hudson;
     QString bug1_link;

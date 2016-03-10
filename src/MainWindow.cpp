@@ -228,7 +228,8 @@ void MainWindow::cellChanged(int row, int /*column*/, int /*previousRow*/, int /
             text += "</table>";
         }
     }
-    widget.text->setText(text);
+    htmlCode = text;
+    widget.text->setHtml(text);
 }
 
 void MainWindow::linkActivated(const QUrl& link) {
@@ -409,7 +410,8 @@ void MainWindow::displayBugs() {
         text.append(QString("<tr><td>%1</td><td>%2</td></tr>").arg(items.at(1)).arg(items.at(0)));
     }
     text += "</table>";
-    widget.text->setText(text);
+    htmlCode = text;
+    widget.text->setHtml(text);
 }
 
 QString MainWindow::toHtml(QString& text) {
@@ -478,8 +480,11 @@ void MainWindow::saveTextAsHTML() {
     QFile file(qstr);
     if (!file.open(QIODevice::WriteOnly | QIODevice::Text)) return;
     QTextStream out(&file);
-    out << widget.text->toHtml()
-            .replace("<img src=\":/icon/images/", "<img src=\"images/");
+    out << "<html><body>\n";
+    out << filtersToQString() << "\n";
+    out << "<br>\n";
+    out << htmlCode.replace("<img src=':/icon/images/", "<img src='images/");
+    out << "</body></html>";
     file.close();
 }
 
