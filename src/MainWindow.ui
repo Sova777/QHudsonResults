@@ -293,7 +293,14 @@
     </property>
     <addaction name="actionAbout"/>
    </widget>
+   <widget class="QMenu" name="menu">
+    <property name="title">
+     <string>Отчёты</string>
+    </property>
+    <addaction name="actionBugs"/>
+   </widget>
    <addaction name="menuFile"/>
+   <addaction name="menu"/>
    <addaction name="menu_2"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
@@ -310,6 +317,11 @@
   <action name="actionAbout">
    <property name="text">
     <string>О программе</string>
+   </property>
+  </action>
+  <action name="actionBugs">
+   <property name="text">
+    <string>Номера багов</string>
    </property>
   </action>
  </widget>

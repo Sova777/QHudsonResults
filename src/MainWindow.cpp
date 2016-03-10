@@ -53,6 +53,8 @@ MainWindow::MainWindow() {
             this, SLOT(close()));
     connect(widget.actionAbout, SIGNAL(triggered()),
             this, SLOT(about()));
+    connect(widget.actionBugs, SIGNAL(triggered()),
+            this, SLOT(displayBugs()));
     connect(widget.btnRefresh, SIGNAL(clicked()),
             this, SLOT(refresh()));
     connect(widget.table, SIGNAL(currentCellChanged(int, int, int, int)),
@@ -163,7 +165,7 @@ void MainWindow::refresh() {
     widget.table->clear();
     widget.table->setRowCount(0);
     widget.table->setSortingEnabled(false);
-    displayTests(data);
+    displayTests();
     widget.table->setSortingEnabled(true);
     widget.table->sortByColumn(0, Qt::AscendingOrder);
     widget.table->setSelectionBehavior(QAbstractItemView::SelectRows);
@@ -194,16 +196,7 @@ void MainWindow::cellChanged(int row, int /*column*/, int /*previousRow*/, int /
                 if (item.getBugId() == "null") {
                     text += "<td>&nbsp;&nbsp;</td>";
                 } else {
-                    int bug = item.getBugIdInt();
-                    QString link;
-                    if (bug <= bug1_max) {
-                        link = QString(bug1_link).arg(bug);
-                    } else if (bug <= bug2_max) {
-                        link = QString(bug2_link).arg(bug);
-                    } else {
-                        link = QString(bug3_link).arg(bug);
-                    }
-                    text += QString("<td>&nbsp;&nbsp;%1</td>").arg(link);                        
+                    text += QString("<td>&nbsp;&nbsp;%1</td>").arg(linkToBug(item.getBugId()));
                 }
                 QString message = item.getMessage();
                 if (message == "null") {
@@ -331,8 +324,8 @@ void MainWindow::applyFilters() {
     }
 }
 
-void MainWindow::displayTests(const QString& fileName) {
-    readFile(fileName);
+void MainWindow::displayTests() {
+    readFile(data);
     applyFilters();
 
     int counter = 0;
@@ -383,6 +376,37 @@ void MainWindow::displayTests(const QString& fileName) {
     }
 }
 
+void MainWindow::displayBugs() {
+    readFile(data);
+    applyFilters();
+
+    QMap<QString, QString> bugsHash;
+    QString text = QString::fromUtf8("<h1>Известные баги</h1><br>");
+    widget.table->setDisabled(true);
+
+    foreach (QString key, allTests.keys()) {
+        if (allTests.contains(key)) {
+            QList<int> testItems = allTests.value(key);
+            foreach (int testIndex, testItems) {
+                QString bugId = testsList[testIndex].getBugId();
+                if (bugId != "null") {
+                    bugsHash[bugId] = linkToBug(bugId) + "|" + bugId;
+                }
+            }
+        }
+    }
+
+    QStringList list = bugsHash.values();
+    qSort(list.begin(), list.end());
+    text += QString::fromUtf8("<table><tr><th width=\"100\">Номер бага</th><th width=\"100\">Ссылка</th></tr>");
+    foreach (const QString& item, list) {
+        QStringList items = item.split("|");
+        text.append(QString("<tr><td>%1</td><td>%2</td></tr>").arg(items.at(1)).arg(items.at(0)));
+    }
+    text += "</table>";
+    widget.text->setText(text);
+}
+
 QString MainWindow::toHtml(QString& text) {
     return text.replace('&', "&amp;").replace('\"', "&quot;").replace('<', "&lt;").replace('>', "&gt;");
 }
@@ -395,4 +419,17 @@ bool MainWindow::isRealName(QString& name) {
         return false;
     }
     return QRegExp("[_.0-9a-zA-Z]*").exactMatch(name);
+}
+
+QString MainWindow::linkToBug(QString bugId) {
+    int bug = bugId.toInt();
+    QString link;
+    if (bug <= bug1_max) {
+        link = QString(bug1_link).arg(bugId);
+    } else if (bug <= bug2_max) {
+        link = QString(bug2_link).arg(bugId);
+    } else {
+        link = QString(bug3_link).arg(bugId);
+    }
+    return link;
 }
