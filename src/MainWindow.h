@@ -62,6 +62,7 @@ private:
     QString toHtml(QString& text);
     QString linkToBug(QString bugId);
     bool isRealName(QString& name);
+    QString filtersToQString();
 
 private slots:
     void about();
@@ -69,6 +70,8 @@ private slots:
     void displayBugs();
     void cellChanged(int row, int /*column*/, int /*previousRow*/, int /*previousColumn*/);
     void linkActivated(const QUrl& link);
+    void saveAsHTML();
+    void saveTextAsHTML();
 
 };
 

@@ -284,6 +284,7 @@
      <string>Файл</string>
     </property>
     <addaction name="actionSaveAsHtml"/>
+    <addaction name="actionTextToHtml"/>
     <addaction name="separator"/>
     <addaction name="actionExit"/>
    </widget>
@@ -311,7 +312,7 @@
   </action>
   <action name="actionSaveAsHtml">
    <property name="text">
-    <string>Сохранить как HTML</string>
+    <string>Сохранить таблицу как HTML</string>
    </property>
   </action>
   <action name="actionAbout">
@@ -322,6 +323,11 @@
   <action name="actionBugs">
    <property name="text">
     <string>Номера багов</string>
+   </property>
+  </action>
+  <action name="actionTextToHtml">
+   <property name="text">
+    <string>Сохранить отчёт как HTML</string>
    </property>
   </action>
  </widget>

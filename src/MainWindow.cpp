@@ -30,6 +30,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <QDesktopServices>
 #include <QDesktopWidget>
 #include <QFile>
+#include <QFileDialog>
 #include <QList>
 #include <QMap>
 #include <QMessageBox>
@@ -55,6 +56,10 @@ MainWindow::MainWindow() {
             this, SLOT(about()));
     connect(widget.actionBugs, SIGNAL(triggered()),
             this, SLOT(displayBugs()));
+    connect(widget.actionSaveAsHtml, SIGNAL(triggered()),
+            this, SLOT(saveAsHTML()));
+    connect(widget.actionTextToHtml, SIGNAL(triggered()),
+            this, SLOT(saveTextAsHTML()));
     connect(widget.btnRefresh, SIGNAL(clicked()),
             this, SLOT(refresh()));
     connect(widget.table, SIGNAL(currentCellChanged(int, int, int, int)),
@@ -432,4 +437,71 @@ QString MainWindow::linkToBug(QString bugId) {
         link = QString(bug3_link).arg(bugId);
     }
     return link;
+}
+
+void MainWindow::saveAsHTML() {
+    QString qstr = QFileDialog::getSaveFileName(this, QString::fromUtf8("Выберите имя файла"), NULL, "HTML Files (*.html *.htm)");
+    if (qstr == "") return;
+    QFile file(qstr);
+    if (!file.open(QIODevice::WriteOnly | QIODevice::Text)) return;
+    QTextStream out(&file);
+    out << "<html><body>\n";
+    out << filtersToQString() << "\n";
+    out << "<br>\n";
+    int rows = widget.table->rowCount();
+    int columns = widget.table->columnCount();
+
+    out << "<table border=\"1\"><tr>";
+    for (int k = 0; k < columns; k++) {
+        QString label = widget.table->horizontalHeaderItem(k)->text();
+        out << "<th>" << label << "</th>";
+    }
+    out << "</tr>\n";
+
+    for (int i = 0; i < rows; i++) {
+        out << "<tr>";
+        for (int j = 0; j < columns; j++) {
+            QString cellText = widget.table->item(i, j)->text();
+            cellText = cellText.replace("<img src=':/icon/images/", "<img src='images/");
+            out << "<td>" << cellText << "</td>";
+        }
+        out << "</tr>\n";
+    }
+
+    out << "</table></body></html>";
+    file.close();
+}
+
+void MainWindow::saveTextAsHTML() {
+    QString qstr = QFileDialog::getSaveFileName(this, QString::fromUtf8("Выберите имя файла"), NULL, "HTML Files (*.html *.htm)");
+    if (qstr == "") return;
+    QFile file(qstr);
+    if (!file.open(QIODevice::WriteOnly | QIODevice::Text)) return;
+    QTextStream out(&file);
+    out << widget.text->toHtml()
+            .replace("<img src=\":/icon/images/", "<img src=\"images/");
+    file.close();
+}
+
+QString MainWindow::filtersToQString() {
+    QDateTime date = QDateTime::currentDateTime();
+    return QString::fromUtf8(
+            "<table>"
+            "<tr><td>Имя теста:</td><td>%1</td></tr>"
+            "<tr><td>С:</td><td>%2</td></tr>"
+            "<tr><td>Последних билдов:</td><td>%3</td></tr>"
+            "<tr><td>Минимальный процент падений:</td><td>%4</td></tr>"
+            "<tr><td>Номера багов:</td><td>%5</td></tr>"
+            "<tr><td>Скрыть \"фейковые\" тесты:</td><td>%6</td></tr>"
+            "<tr><td>Выбранные задачи:</td><td>%7</td></tr>"
+            "<tr><td>Текущая дата:</td><td>%8</td></tr>"
+            "</table>")
+            .arg(widget.editTestName->text())
+            .arg(widget.calendarWidget->selectedDate().toString("yyyy-MM-dd"))
+            .arg(widget.spinBuilds->value())
+            .arg(widget.spinPercents->value())
+            .arg(widget.editBugs->text())
+            .arg((widget.cbRealName->isChecked()) ? QString::fromUtf8("да") : QString::fromUtf8("нет"))
+            .arg(widget.cbMode->currentText())
+            .arg(date.toString("yyyy-MM-dd hh:mm:ss"));
 }
