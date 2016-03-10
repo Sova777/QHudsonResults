@@ -163,7 +163,7 @@ void MainWindow::refresh() {
     widget.table->clear();
     widget.table->setRowCount(0);
     widget.table->setSortingEnabled(false);
-    readFile(data);
+    displayTests(data);
     widget.table->setSortingEnabled(true);
     widget.table->sortByColumn(0, Qt::AscendingOrder);
     widget.table->setSelectionBehavior(QAbstractItemView::SelectRows);
@@ -241,9 +241,6 @@ void MainWindow::linkActivated(const QUrl& link) {
 void MainWindow::readFile(const QString& fileName) {
     QString testNameFilter = widget.editTestName->text();
     QString dateMin = widget.calendarWidget->selectedDate().toString("yyyy-MM-dd");
-    QRegExp jobsRegExp(template_regexp[widget.cbMode->currentIndex()]);
-    bool checkKnownFailures = (widget.editBugs->text() == "") ? false : true;
-    QRegExp bugsRegExp(widget.editBugs->text());
     int builds = widget.spinBuilds->value();
     bool realNamesOnly = widget.cbRealName->isChecked();
 
@@ -289,6 +286,12 @@ void MainWindow::readFile(const QString& fileName) {
         }
     }
     file.close();
+}
+
+void MainWindow::applyFilters() {
+    QRegExp jobsRegExp(template_regexp[widget.cbMode->currentIndex()]);
+    bool checkKnownFailures = (widget.editBugs->text() == "") ? false : true;
+    QRegExp bugsRegExp(widget.editBugs->text());
 
     foreach (QString key, allTests.keys()) {
         int testTotal = 0;
@@ -326,6 +329,13 @@ void MainWindow::readFile(const QString& fileName) {
             jobsHash.remove(job);
         }
     }
+}
+
+void MainWindow::displayTests(const QString& fileName) {
+    readFile(fileName);
+    applyFilters();
+
+    int counter = 0;
 
     int sizeJobs = jobsHash.size();
     widget.table->setRowCount(testsHash.size());

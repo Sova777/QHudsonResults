@@ -57,6 +57,8 @@ private:
 
     void closeEvent(QCloseEvent *event);
     void readFile(const QString& fileName);
+    void applyFilters();
+    void displayTests(const QString& fileName);
     QString toHtml(QString& text);
     bool isRealName(QString& name);
 
