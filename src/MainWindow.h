@@ -64,6 +64,8 @@ private:
     QString linkToBug(QString bugId);
     bool isRealName(QString& name);
     QString filtersToQString();
+    void typeHtmlHeader(QTextStream& out);
+    void typeHtmlFooter(QTextStream& out);
 
 private slots:
     void about();

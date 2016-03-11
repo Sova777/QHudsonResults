@@ -447,7 +447,7 @@ void MainWindow::saveAsHTML() {
     QFile file(qstr);
     if (!file.open(QIODevice::WriteOnly | QIODevice::Text)) return;
     QTextStream out(&file);
-    out << "<html><body>\n";
+    typeHtmlHeader(out);
     out << filtersToQString() << "\n";
     out << "<br>\n";
     int rows = widget.table->rowCount();
@@ -470,7 +470,7 @@ void MainWindow::saveAsHTML() {
         out << "</tr>\n";
     }
 
-    out << "</table></body></html>";
+    typeHtmlFooter(out);
     file.close();
 }
 
@@ -480,11 +480,11 @@ void MainWindow::saveTextAsHTML() {
     QFile file(qstr);
     if (!file.open(QIODevice::WriteOnly | QIODevice::Text)) return;
     QTextStream out(&file);
-    out << "<html><body>\n";
+    typeHtmlHeader(out);
     out << filtersToQString() << "\n";
     out << "<br>\n";
     out << htmlCode.replace("<img src=':/icon/images/", "<img src='images/");
-    out << "</body></html>";
+    typeHtmlFooter(out);
     file.close();
 }
 
@@ -509,4 +509,21 @@ QString MainWindow::filtersToQString() {
             .arg((widget.cbRealName->isChecked()) ? QString::fromUtf8("да") : QString::fromUtf8("нет"))
             .arg(widget.cbMode->currentText())
             .arg(date.toString("yyyy-MM-dd hh:mm:ss"));
+}
+
+void MainWindow::typeHtmlHeader(QTextStream& out) {
+    out << "<html>\n"
+            << "<head>\n"
+            << "<meta charset=\"UTF-8\">\n"
+            << "<style type=\"text/css\">\n"
+            << "table { border-collapse: separate; empty-cells: show; }\n"
+            << "</style>\n"
+            << "</head>\n"
+            << "<body>\n";
+
+}
+
+void MainWindow::typeHtmlFooter(QTextStream& out) {
+    out << "</body>\n"
+            << "</html>";
 }
