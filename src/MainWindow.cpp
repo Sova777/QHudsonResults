@@ -447,21 +447,28 @@ void MainWindow::saveAsHTML() {
     QFile file(qstr);
     if (!file.open(QIODevice::WriteOnly | QIODevice::Text)) return;
     QTextStream out(&file);
+    out.setCodec("UTF-8");
     typeHtmlHeader(out);
     out << filtersToQString() << "\n";
     out << "<br>\n";
     int rows = widget.table->rowCount();
     int columns = widget.table->columnCount();
 
-    out << "<table border=\"1\"><tr>";
+    if (columns < 7) {
+        out << "<table border=\"1\" width=\"75%\"><tr>";
+    } else {
+        out << "<table border=\"1\"><tr>";
+    }
+        out << "<th>&#8470;</th>";
     for (int k = 0; k < columns; k++) {
         QString label = widget.table->horizontalHeaderItem(k)->text();
-        out << "<th>" << label << "</th>";
+        out << "<th>" << label.replace("-", "<br>").replace("_", "<br>") << "</th>";
     }
     out << "</tr>\n";
 
     for (int i = 0; i < rows; i++) {
         out << "<tr>";
+        out << "<td>" << (i + 1) << "</td>";
         for (int j = 0; j < columns; j++) {
             QString cellText = widget.table->item(i, j)->text();
             cellText = cellText.replace("<img src=':/icon/images/", "<img src='images/");
@@ -480,6 +487,7 @@ void MainWindow::saveTextAsHTML() {
     QFile file(qstr);
     if (!file.open(QIODevice::WriteOnly | QIODevice::Text)) return;
     QTextStream out(&file);
+    out.setCodec("UTF-8");
     typeHtmlHeader(out);
     out << filtersToQString() << "\n";
     out << "<br>\n";
