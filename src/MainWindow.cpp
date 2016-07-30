@@ -567,6 +567,7 @@ void MainWindow::fileDownloaded(QNetworkReply *reply) {
             file.close();
         }
         reply->deleteLater();
+        widget.btnDownload->setDisabled(true);
         QMessageBox msgBox;
         msgBox.setText(QString::fromUtf8("Обновления закачаны"));
         msgBox.exec();
