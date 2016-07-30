@@ -31,6 +31,9 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "ui_MainWindow.h"
 #include "TestItem.h"
 
+class QNetworkAccessManager;
+class QNetworkReply;
+
 class MainWindow : public QMainWindow {
     Q_OBJECT
 public:
@@ -39,6 +42,7 @@ public:
     Ui::MainWindow widget;
 
 private:
+    QNetworkAccessManager *networkManager;
     QMap<QString, int> jobsHash;
     QMap<QString, int> testsHash;
     QList<TestItem> testsList;
@@ -46,6 +50,7 @@ private:
     QStringList jobNames;
     QString htmlCode;
     QString data;
+    QString data_url;
     QString hudson;
     QString bug1_link;
     int bug1_max;
@@ -69,6 +74,8 @@ private:
 
 private slots:
     void about();
+    void download();
+    void fileDownloaded(QNetworkReply *reply);
     void refresh();
     void displayBugs();
     void cellChanged(int row, int /*column*/, int /*previousRow*/, int /*previousColumn*/);

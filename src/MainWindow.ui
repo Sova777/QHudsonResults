@@ -85,7 +85,7 @@
         <property name="geometry">
          <rect>
           <x>6</x>
-          <y>415</y>
+          <y>410</y>
           <width>288</width>
           <height>30</height>
          </rect>
@@ -104,7 +104,7 @@
         <property name="geometry">
          <rect>
           <x>6</x>
-          <y>10</y>
+          <y>5</y>
           <width>288</width>
           <height>30</height>
          </rect>
@@ -114,7 +114,7 @@
         <property name="geometry">
          <rect>
           <x>6</x>
-          <y>50</y>
+          <y>45</y>
           <width>288</width>
           <height>183</height>
          </rect>
@@ -124,7 +124,7 @@
         <property name="geometry">
          <rect>
           <x>6</x>
-          <y>244</y>
+          <y>239</y>
           <width>71</width>
           <height>30</height>
          </rect>
@@ -137,7 +137,7 @@
         <property name="geometry">
          <rect>
           <x>90</x>
-          <y>244</y>
+          <y>239</y>
           <width>201</width>
           <height>30</height>
          </rect>
@@ -153,7 +153,7 @@
         <property name="geometry">
          <rect>
           <x>90</x>
-          <y>280</y>
+          <y>275</y>
           <width>201</width>
           <height>30</height>
          </rect>
@@ -166,7 +166,7 @@
         <property name="geometry">
          <rect>
           <x>6</x>
-          <y>280</y>
+          <y>275</y>
           <width>71</width>
           <height>30</height>
          </rect>
@@ -182,7 +182,7 @@
         <property name="geometry">
          <rect>
           <x>6</x>
-          <y>350</y>
+          <y>345</y>
           <width>288</width>
           <height>30</height>
          </rect>
@@ -198,7 +198,7 @@
         <property name="geometry">
          <rect>
           <x>6</x>
-          <y>380</y>
+          <y>375</y>
           <width>288</width>
           <height>30</height>
          </rect>
@@ -208,7 +208,7 @@
         <property name="geometry">
          <rect>
           <x>6</x>
-          <y>316</y>
+          <y>311</y>
           <width>71</width>
           <height>30</height>
          </rect>
@@ -218,13 +218,32 @@
         <property name="geometry">
          <rect>
           <x>90</x>
-          <y>316</y>
+          <y>311</y>
           <width>201</width>
           <height>30</height>
          </rect>
         </property>
         <property name="text">
          <string>Номера багов</string>
+        </property>
+       </widget>
+       <widget class="QPushButton" name="btnDownload">
+        <property name="geometry">
+         <rect>
+          <x>6</x>
+          <y>480</y>
+          <width>288</width>
+          <height>30</height>
+         </rect>
+        </property>
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="text">
+         <string>Скачать обновления</string>
         </property>
        </widget>
       </widget>

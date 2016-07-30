@@ -34,6 +34,8 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <QList>
 #include <QMap>
 #include <QMessageBox>
+#include <QNetworkAccessManager>
+#include <QNetworkReply>
 #include <QSettings>
 #include <QString>
 #include <QTextStream>
@@ -60,12 +62,18 @@ MainWindow::MainWindow() {
             this, SLOT(saveAsHTML()));
     connect(widget.actionTextToHtml, SIGNAL(triggered()),
             this, SLOT(saveTextAsHTML()));
+    connect(widget.btnDownload, SIGNAL(clicked()),
+            this, SLOT(download()));
     connect(widget.btnRefresh, SIGNAL(clicked()),
             this, SLOT(refresh()));
     connect(widget.table, SIGNAL(currentCellChanged(int, int, int, int)),
             this, SLOT(cellChanged(int, int, int, int)));
     connect(widget.text, SIGNAL(anchorClicked(const QUrl &)),
             this, SLOT(linkActivated(const QUrl &)));
+
+    networkManager = new QNetworkAccessManager(this);
+    connect(networkManager, SIGNAL(finished(QNetworkReply*)),
+            this, SLOT(fileDownloaded(QNetworkReply*)));
 
     QSettings settings(QSettings::IniFormat, QSettings::UserScope,
             "QHudsonResults", "QHudsonResults");
@@ -78,6 +86,7 @@ MainWindow::MainWindow() {
             }
         }
     }
+    data_url = settings.value("data_url").toString();
     hudson = settings.value("hudson").toString();
     bug1_link = settings.value("bug1_link").toString();
     bug1_max = settings.value("bug1_max").toInt();
@@ -132,6 +141,7 @@ void MainWindow::closeEvent(QCloseEvent *event) {
     settings.setValue("width", width());
     settings.setValue("height", height());
     settings.setValue("data", data);
+    settings.setValue("data_url", data_url);
     settings.setValue("hudson", hudson);
     settings.setValue("bug1_link", bug1_link);
     settings.setValue("bug1_max", bug1_max);
@@ -534,4 +544,32 @@ void MainWindow::typeHtmlHeader(QTextStream& out) {
 void MainWindow::typeHtmlFooter(QTextStream& out) {
     out << "</body>\n"
             << "</html>";
+}
+
+void MainWindow::download() {
+    setDisabled(true);
+    networkManager->get(QNetworkRequest(QUrl(data_url)));
+}
+
+void MainWindow::fileDownloaded(QNetworkReply *reply) {
+    if (reply->error()) {
+        QMessageBox msgBox;
+        msgBox.setText(reply->errorString());
+        msgBox.exec();
+    } else {
+        if ((data == NULL) || (data == "")) {
+            return;
+        }
+        QFile file(data);
+        if (file.open(QFile::WriteOnly)) {
+            file.write(reply->readAll());
+            file.flush();
+            file.close();
+        }
+        reply->deleteLater();
+        QMessageBox msgBox;
+        msgBox.setText(QString::fromUtf8("Обновления закачаны"));
+        msgBox.exec();
+    }
+    setEnabled(true);
 }

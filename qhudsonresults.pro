@@ -1,12 +1,12 @@
 TEMPLATE = app
 TARGET = qhudsonresults
 VERSION = 1.0.0
-QT += core gui
+QT += core gui network
 greaterThan(QT_MAJOR_VERSION, 4) {
            QT += widgets
 }
 #QMAKE_CXXFLAGS = -Wno-unused-parameter
-#CONFIG += console
+#CONFIG += console debug
 DEPENDPATH += . src
 INCLUDEPATH += . src
 
