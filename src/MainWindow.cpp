@@ -96,24 +96,20 @@ MainWindow::MainWindow() {
     bug3_max = settings.value("bug3_max").toInt();
     template_title[0] = QString::fromUtf8("Все тесты");
     template_regexp[0] = ".*";
-    template_title[1] = settings.value("template1_title").toString();
-    template_regexp[1] = settings.value("template1_regexp").toString();
-    template_title[2] = settings.value("template2_title").toString();
-    template_regexp[2] = settings.value("template2_regexp").toString();
-    template_title[3] = settings.value("template3_title").toString();
-    template_regexp[3] = settings.value("template3_regexp").toString();
-    template_title[4] = settings.value("template4_title").toString();
-    template_regexp[4] = settings.value("template4_regexp").toString();
-    template_title[5] = settings.value("template5_title").toString();
-    template_regexp[5] = settings.value("template5_regexp").toString();
-    template_title[6] = settings.value("template6_title").toString();
-    template_regexp[6] = settings.value("template6_regexp").toString();
-    template_title[7] = settings.value("template7_title").toString();
-    template_regexp[7] = settings.value("template7_regexp").toString();
-    template_title[8] = settings.value("template8_title").toString();
-    template_regexp[8] = settings.value("template8_regexp").toString();
-    template_title[9] = settings.value("template9_title").toString();
-    template_regexp[9] = settings.value("template9_regexp").toString();
+    int index = 1;
+    for (int i = 1; i < 20; i++) {
+        template_title[index] = "";
+        template_regexp[index] = "";
+    }
+    for (int i = 1; i < 20; i++) {
+        QString title = settings.value(QString::fromLatin1("template%1_title").arg(i)).toString();
+        QString regexp = settings.value(QString::fromLatin1("template%1_regexp").arg(i)).toString();
+        if (title != "") {
+            template_title[index] = title;
+            template_regexp[index] = regexp;
+            index++;
+        }
+    }
 
     int h = settings.value("height").toInt();
     int w = settings.value("width").toInt();
@@ -123,8 +119,10 @@ MainWindow::MainWindow() {
                 nSize, qApp->desktop()->availableGeometry()));
     }
 
-    for (int i = 0; i < 10; i++) {
-        widget.cbMode->addItem(template_title[i]);
+    for (int i = 0; i < 20; i++) {
+        if (template_title[i] != "") {
+            widget.cbMode->addItem(template_title[i]);
+        }
     }
     widget.table->setItemDelegate(new HtmlItemDelegate(widget.table));
     widget.table->setItemDelegateForColumn(0, new QItemDelegate(widget.table));
@@ -149,24 +147,12 @@ void MainWindow::closeEvent(QCloseEvent *event) {
     settings.setValue("bug2_max", bug2_max);
     settings.setValue("bug3_link", bug3_link);
     settings.setValue("bug3_max", bug3_max);
-    settings.setValue("template1_title", template_title[1]);
-    settings.setValue("template1_regexp", template_regexp[1]);
-    settings.setValue("template2_title", template_title[2]);
-    settings.setValue("template2_regexp", template_regexp[2]);
-    settings.setValue("template3_title", template_title[3]);
-    settings.setValue("template3_regexp", template_regexp[3]);
-    settings.setValue("template4_title", template_title[4]);
-    settings.setValue("template4_regexp", template_regexp[4]);
-    settings.setValue("template5_title", template_title[5]);
-    settings.setValue("template5_regexp", template_regexp[5]);
-    settings.setValue("template6_title", template_title[6]);
-    settings.setValue("template6_regexp", template_regexp[6]);
-    settings.setValue("template7_title", template_title[7]);
-    settings.setValue("template7_regexp", template_regexp[7]);
-    settings.setValue("template8_title", template_title[8]);
-    settings.setValue("template8_regexp", template_regexp[8]);
-    settings.setValue("template9_title", template_title[9]);
-    settings.setValue("template9_regexp", template_regexp[9]);
+
+    for (int i = 1; i < 20; i++) {
+        settings.setValue(QString::fromLatin1("template%1_title").arg(i), template_title[i]);
+        settings.setValue(QString::fromLatin1("template%1_regexp").arg(i), template_regexp[i]);
+    }
+
     settings.sync();
     event->accept();
 }

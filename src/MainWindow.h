@@ -28,11 +28,11 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #ifndef _MAINWINDOW_H
 #define	_MAINWINDOW_H
 
+#include <QNetworkAccessManager>
+#include <QNetworkReply>
+
 #include "ui_MainWindow.h"
 #include "TestItem.h"
-
-class QNetworkAccessManager;
-class QNetworkReply;
 
 class MainWindow : public QMainWindow {
     Q_OBJECT
@@ -58,8 +58,8 @@ private:
     int bug2_max;
     QString bug3_link;
     int bug3_max;
-    QString template_title[10];
-    QString template_regexp[10];
+    QString template_title[20];
+    QString template_regexp[20];
 
     void closeEvent(QCloseEvent *event);
     void readFile(const QString& fileName);
