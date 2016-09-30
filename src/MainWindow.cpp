@@ -455,14 +455,14 @@ void MainWindow::saveAsHTML() {
     int columns = widget.table->columnCount();
 
     if (columns < 7) {
-        out << "<table border=\"1\" width=\"75%\"><tr>";
+        out << "<table class=\"content\" width=\"75%\"><tr>";
     } else {
-        out << "<table border=\"1\"><tr>";
+        out << "<table class=\"content\"><tr>";
     }
         out << "<th>&#8470;</th>";
     for (int k = 0; k < columns; k++) {
         QString label = widget.table->horizontalHeaderItem(k)->text();
-        out << "<th>" << label.replace("-", "<br>").replace("_", "<br>") << "</th>";
+        out << "<th>" << label.replace("\n", "<br>").replace("-", "<br>").replace("_", "<br>") << "</th>";
     }
     out << "</tr>\n";
 
@@ -524,7 +524,11 @@ void MainWindow::typeHtmlHeader(QTextStream& out) {
             << "<head>\n"
             << "<meta charset=\"UTF-8\">\n"
             << "<style type=\"text/css\">\n"
-            << "table { border-collapse: separate; empty-cells: show; }\n"
+            << "table { border-collapse: collapse; border: 0px solid black; empty-cells: show; }\n"
+            << "table td, table th { padding: 3px 10px; }\n"
+            << "table.content { border-collapse: collapse; border: 1px solid black; empty-cells: show; }\n"
+            << "table.content th { background-color: white; }\n"
+            << "table.content td, table.content th { border: 1px solid black; padding: 4px; }\n"
             << "</style>\n"
             << "</head>\n"
             << "<body>\n";
