@@ -62,6 +62,10 @@ MainWindow::MainWindow() {
             this, SLOT(saveAsHTML()));
     connect(widget.actionTextToHtml, SIGNAL(triggered()),
             this, SLOT(saveTextAsHTML()));
+    connect(widget.editTestName, SIGNAL(returnPressed()),
+            this, SLOT(refresh()));
+    connect(widget.editBugs, SIGNAL(returnPressed()),
+            this, SLOT(refresh()));
     connect(widget.btnDownload, SIGNAL(clicked()),
             this, SLOT(download()));
     connect(widget.btnRefresh, SIGNAL(clicked()),
@@ -336,7 +340,7 @@ void MainWindow::displayTests() {
     widget.table->setRowCount(testsHash.size());
     widget.table->setColumnCount(sizeJobs + 1);
     widget.table->setColumnWidth(0, 400);
-    widget.table->horizontalHeader()->setFixedHeight(40);
+    widget.table->horizontalHeader()->setFixedHeight(90);
     for (int i = 1; i < sizeJobs; i++) {
         widget.table->setColumnWidth(i, 120);
     }
@@ -345,9 +349,9 @@ void MainWindow::displayTests() {
     headers.append(QString::fromUtf8("Имя теста"));
     counter = 0;
     foreach (QString job, jobsHash.keys()) {
-        headers.append(job);
         jobNames.append(job);
         jobsHash[job] = counter;
+        headers.append(job.replace("-", "\n"));
         counter++;
     }
     widget.table->setHorizontalHeaderLabels(headers);
