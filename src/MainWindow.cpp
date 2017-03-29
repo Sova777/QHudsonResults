@@ -221,6 +221,10 @@ void MainWindow::cellChanged(int row, int /*column*/, int /*previousRow*/, int /
                             .arg(fileName)
                             .arg(methodName)
                             .arg(toHtml(message));
+                    QString failFile = item.getFailFile();
+                    if (failFile != "null") {
+                        message += QString("&nbsp;&nbsp;(%1)").arg(failFile);
+                    }
                 }
                 text += "<td>&nbsp;&nbsp;" + message + "</td>";
                 text += "</tr>";
@@ -264,12 +268,13 @@ void MainWindow::readFile(const QString& fileName) {
             QString name = fields.at(3).trimmed();
             QString status = fields.at(4).trimmed();
             QString bugId = fields.at(5).trimmed();
-            QString message = fields.at(6).trimmed();
+            QString failfile = fields.at(6).trimmed();
+            QString message = fields.at(7).trimmed();
 
             if (name.contains(testNameFilter, Qt::CaseInsensitive)) {
                 if (!realNamesOnly || isRealName(name)) {
                     if (time > dateMin) {
-                        testsList.push_back(TestItem(job, time, build, name, status, bugId, message));
+                        testsList.push_back(TestItem(job, time, build, name, status, bugId, failfile, message));
                         QString key = QString(QString("%1|%2").arg(name).arg(job));
                         if (!allTests.contains(key)) {
                             allTests[key] = QList<int>();

@@ -29,13 +29,14 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "TestItem.h"
 
 TestItem::TestItem(QString _job, QString _time, QString _build, QString _name,
-        QString _status, QString _bugId, QString _message) {
+        QString _status, QString _bugId, QString _failfile, QString _message) {
     job = _job;
     time = _time;
     build = _build;
     name = _name;
     status = _status;
     bugId = _bugId;
+    failfile = _failfile;
     message = _message;
 }
 
@@ -105,4 +106,8 @@ QString TestItem::getStatusImage() const {
         return "<img src=':/icon/images/absent.png'>";
     }
     return status;
+}
+
+QString TestItem::getFailFile() const {
+    return failfile;
 }

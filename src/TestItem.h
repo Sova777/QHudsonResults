@@ -31,7 +31,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 class TestItem {
 public:
     TestItem(QString _job, QString _time, QString _build, QString _name,
-            QString _status, QString _bugId, QString _message);
+            QString _status, QString _bugId, QString _failfile, QString _message);
 //    TestItem& addBugId(QString _bugId);
 //    TestItem& addMessage(QString _message);
     QString getBugId() const;
@@ -45,6 +45,7 @@ public:
     bool isFailed() const;
     QString getStatusChar() const;
     QString getStatusImage() const;
+    QString getFailFile() const;
 
 private:
     QString job;
@@ -53,6 +54,7 @@ private:
     QString name;
     QString status;
     QString bugId;
+    QString failfile;
     QString message;
 };
 
