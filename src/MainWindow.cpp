@@ -222,7 +222,11 @@ void MainWindow::cellChanged(int row, int /*column*/, int /*previousRow*/, int /
                             .arg(methodName)
                             .arg(toHtml(message));
                     QString failFile = item.getFailFile();
+                    QString md5sum = item.getMD5Sum();
                     if (failFile != "null") {
+                        message += QString("&nbsp;&nbsp;(%1)").arg(failFile);
+                    }
+                    if (md5sum != "null") {
                         message += QString("&nbsp;&nbsp;(%1)").arg(failFile);
                     }
                 }
@@ -269,12 +273,13 @@ void MainWindow::readFile(const QString& fileName) {
             QString status = fields.at(4).trimmed();
             QString bugId = fields.at(5).trimmed();
             QString failfile = fields.at(6).trimmed();
-            QString message = fields.at(7).trimmed();
+            QString md5sum = fields.at(7).trimmed();
+            QString message = fields.at(8).trimmed();
 
             if (name.contains(testNameFilter, Qt::CaseInsensitive)) {
                 if (!realNamesOnly || isRealName(name)) {
                     if (time > dateMin) {
-                        testsList.push_back(TestItem(job, time, build, name, status, bugId, failfile, message));
+                        testsList.push_back(TestItem(job, time, build, name, status, bugId, failfile, md5sum, message));
                         QString key = QString(QString("%1|%2").arg(name).arg(job));
                         if (!allTests.contains(key)) {
                             allTests[key] = QList<int>();

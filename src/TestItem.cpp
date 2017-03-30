@@ -29,7 +29,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "TestItem.h"
 
 TestItem::TestItem(QString _job, QString _time, QString _build, QString _name,
-        QString _status, QString _bugId, QString _failfile, QString _message) {
+        QString _status, QString _bugId, QString _failfile, QString _md5sum, QString _message) {
     job = _job;
     time = _time;
     build = _build;
@@ -37,6 +37,7 @@ TestItem::TestItem(QString _job, QString _time, QString _build, QString _name,
     status = _status;
     bugId = _bugId;
     failfile = _failfile;
+    md5sum = _md5sum;
     message = _message;
 }
 
@@ -110,4 +111,8 @@ QString TestItem::getStatusImage() const {
 
 QString TestItem::getFailFile() const {
     return failfile;
+}
+
+QString TestItem::getMD5Sum() const {
+    return md5sum;
 }
