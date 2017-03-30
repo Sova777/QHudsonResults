@@ -229,7 +229,7 @@ void MainWindow::cellChanged(int row, int /*column*/, int /*previousRow*/, int /
                         message += QString("&nbsp;&nbsp;(%1)").arg(failFile);
                     }
                     if (md5sum != "null") {
-                        message += QString("&nbsp;&nbsp;(%1)").arg(failFile);
+                        message += QString("&nbsp;&nbsp;(%1)").arg(md5sum);
                     }
                 }
                 text += "<td>&nbsp;&nbsp;" + message + "</td>";
@@ -438,7 +438,7 @@ void MainWindow::displayFailFiles() {
         if (allTests.contains(key)) {
             QList<int> testItems = allTests.value(key);
             foreach (int testIndex, testItems) {
-                QString failFile = testsList[testIndex].getMD5Sum();
+                QString failFile = testsList[testIndex].getFailFile();
                 if (failFile != "null") {
                     bugsHash[failFile] = failFile;
                 }
@@ -448,7 +448,7 @@ void MainWindow::displayFailFiles() {
 
     QStringList list = bugsHash.values();
     qSort(list.begin(), list.end());
-    text += QString::fromUtf8("<table><tr><th width=\"100\">Имя файл</th></tr>");
+    text += QString::fromUtf8("<table><tr><th width=\"400\">Имя файла</th></tr>");
     foreach (const QString& item, list) {
         text.append(QString("<tr><td>%1</td></tr>").arg(item));
     }
