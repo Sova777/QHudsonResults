@@ -318,6 +318,7 @@
      <string>Отчёты</string>
     </property>
     <addaction name="actionBugs"/>
+    <addaction name="actionFailFiles"/>
    </widget>
    <addaction name="menuFile"/>
    <addaction name="menu"/>
@@ -347,6 +348,11 @@
   <action name="actionTextToHtml">
    <property name="text">
     <string>Сохранить отчёт как HTML</string>
+   </property>
+  </action>
+  <action name="actionFailFiles">
+   <property name="text">
+    <string>Файлы-ошибки</string>
    </property>
   </action>
  </widget>

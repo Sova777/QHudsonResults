@@ -78,6 +78,7 @@ private slots:
     void fileDownloaded(QNetworkReply *reply);
     void refresh();
     void displayBugs();
+    void displayFailFiles();
     void cellChanged(int row, int /*column*/, int /*previousRow*/, int /*previousColumn*/);
     void linkActivated(const QUrl& link);
     void saveAsHTML();

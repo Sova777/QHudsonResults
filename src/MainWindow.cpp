@@ -58,6 +58,8 @@ MainWindow::MainWindow() {
             this, SLOT(about()));
     connect(widget.actionBugs, SIGNAL(triggered()),
             this, SLOT(displayBugs()));
+    connect(widget.actionFailFiles, SIGNAL(triggered()),
+            this, SLOT(displayFailFiles()));
     connect(widget.actionSaveAsHtml, SIGNAL(triggered()),
             this, SLOT(saveAsHTML()));
     connect(widget.actionTextToHtml, SIGNAL(triggered()),
@@ -418,6 +420,37 @@ void MainWindow::displayBugs() {
     foreach (const QString& item, list) {
         QStringList items = item.split("|");
         text.append(QString("<tr><td>%1</td><td>%2</td></tr>").arg(items.at(1)).arg(items.at(0)));
+    }
+    text += "</table>";
+    htmlCode = text;
+    widget.text->setHtml(text);
+}
+
+void MainWindow::displayFailFiles() {
+    readFile(data);
+    applyFilters();
+
+    QMap<QString, QString> bugsHash;
+    QString text = QString::fromUtf8("<h1>Файлы-ошибки</h1><br>");
+    widget.table->setDisabled(true);
+
+    foreach (QString key, allTests.keys()) {
+        if (allTests.contains(key)) {
+            QList<int> testItems = allTests.value(key);
+            foreach (int testIndex, testItems) {
+                QString failFile = testsList[testIndex].getMD5Sum();
+                if (failFile != "null") {
+                    bugsHash[failFile] = failFile;
+                }
+            }
+        }
+    }
+
+    QStringList list = bugsHash.values();
+    qSort(list.begin(), list.end());
+    text += QString::fromUtf8("<table><tr><th width=\"100\">Имя файл</th></tr>");
+    foreach (const QString& item, list) {
+        text.append(QString("<tr><td>%1</td></tr>").arg(item));
     }
     text += "</table>";
     htmlCode = text;
