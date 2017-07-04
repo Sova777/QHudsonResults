@@ -206,10 +206,16 @@ void MainWindow::cellChanged(int row, int /*column*/, int /*previousRow*/, int /
                     text += QString("<td>&nbsp;&nbsp;%1</td>").arg(linkToBug(item.getBugId()));
                 }
                 QString message = item.getMessage();
+
+                QStringList jobFolders = jobName.split("/");
+                QString jobFolder = jobName;
+                if (jobFolders.length() > 1) {
+                    jobFolder = QString("%1/job/%2").arg(jobFolders[0]).arg(jobFolders[1]);
+                }
                 if (message == "null") {
                     message = QString("<a href=\"%1%2/%3/testReport/%4/%5/%6\">OK</a>")
                             .arg(hudson)
-                            .arg(jobName)
+                            .arg(jobFolder)
                             .arg(item.getBuild())
                             .arg(packageName)
                             .arg(fileName)
@@ -217,7 +223,7 @@ void MainWindow::cellChanged(int row, int /*column*/, int /*previousRow*/, int /
                 } else {
                     message = QString("<a href=\"%1%2/%3/testReport/%4/%5/%6\">%7</a>")
                             .arg(hudson)
-                            .arg(jobName)
+                            .arg(jobFolder)
                             .arg(item.getBuild())
                             .arg(packageName)
                             .arg(fileName)
@@ -352,7 +358,7 @@ void MainWindow::displayTests() {
     widget.table->setRowCount(testsHash.size());
     widget.table->setColumnCount(sizeJobs + 1);
     widget.table->setColumnWidth(0, 400);
-    widget.table->horizontalHeader()->setFixedHeight(90);
+    widget.table->horizontalHeader()->setFixedHeight(130);
     for (int i = 1; i < sizeJobs; i++) {
         widget.table->setColumnWidth(i, 120);
     }
@@ -363,7 +369,7 @@ void MainWindow::displayTests() {
     foreach (QString job, jobsHash.keys()) {
         jobNames.append(job);
         jobsHash[job] = counter;
-        headers.append(job.replace("-", "\n"));
+        headers.append(job.replace("-", "\n").replace("/", "\n"));
         counter++;
     }
     widget.table->setHorizontalHeaderLabels(headers);
@@ -505,7 +511,7 @@ void MainWindow::saveAsHTML() {
         out << "<th>&#8470;</th>";
     for (int k = 0; k < columns; k++) {
         QString label = widget.table->horizontalHeaderItem(k)->text();
-        out << "<th>" << label.replace("\n", "<br>").replace("-", "<br>").replace("_", "<br>") << "</th>";
+        out << "<th>" << label.replace("\n", "<br>").replace("-", "<br>").replace("_", "<br>").replace("/", "<br>") << "</th>";
     }
     out << "</tr>\n";
 
